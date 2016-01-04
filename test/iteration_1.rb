@@ -1,7 +1,7 @@
 require 'socket'
 require_relative 'Iter_0'
 
-iter_0 = HelloWorld.new
+iter_1 = OutputDiagnostic.new
 tcp_server = TCPServer.new(9292)
 
 loop do
@@ -34,3 +34,14 @@ puts ["Wrote this response:", headers, output].join("\n")
 client.close
 puts "\nResponse complete, exiting."
 end
+
+
+# <pre>
+# Verb: POST
+# Path: /
+# Protocol: HTTP/1.1
+# Host: 127.0.0.1
+# Port: 9292
+# Origin: 127.0.0.1
+# Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+# </pre>

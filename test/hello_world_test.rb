@@ -8,7 +8,9 @@ class HelloWorldTest < Minitest::Test
 
   end
 
-  def test_server_is
+  def test_server_is_up_and_running
+    
+  end
 
 
 end
