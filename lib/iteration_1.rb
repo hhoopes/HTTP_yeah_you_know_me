@@ -1,18 +1,25 @@
 require 'socket'
+require_relative 'Iter_1'
+
+iter_1 = Iter_1.new
 tcp_server = TCPServer.new(9292)
+loop do
 client = tcp_server.accept
 
 puts "Ready for a request"
 request_lines = []
 while line = client.gets and !line.chomp.empty?
   request_lines << line.chomp
+
 end
+
+iter_1.increment
 
 puts "Got this request:"
 puts request_lines.inspect
 
 puts "Sending response."
-response = "<pre>" + request_lines.join("\n") + "</pre>"
+response = "<pre>" + iter_1.hello + "</pre>"
 output = "<html><head></head><body>#{response}</body></html>"
 headers = ["http/1.1 200 ok",
           "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
@@ -25,3 +32,4 @@ client.puts output
 puts ["Wrote this response:", headers, output].join("\n")
 client.close
 puts "\nResponse complete, exiting."
+end
