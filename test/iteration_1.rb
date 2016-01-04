@@ -8,6 +8,7 @@ puts "Ready for a request"
 request_lines = []
 while line = client.gets and !line.chomp.empty?
   request_lines << line.chomp
+  
 end
 
 iter_1.increment
