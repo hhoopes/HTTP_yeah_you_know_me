@@ -14,7 +14,7 @@ while line = client.gets and !line.chomp.empty?
 
 end
 
-iter_0.increment
+iter_1.increment
 
 puts "Got this request:"
 puts request_lines.inspect

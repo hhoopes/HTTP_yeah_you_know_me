@@ -1,4 +1,4 @@
-class Iter_0
+class HelloWorld
 
   def initialize
     @iteration_number = 0
