@@ -1,7 +1,7 @@
 require 'socket'
-require_relative 'Iter_1'
+require_relative 'Iter_0'
 
-iter_1 = Iter_1.new
+iter_0 = Iter_0.new
 tcp_server = TCPServer.new(9292)
 
 loop do
@@ -20,7 +20,7 @@ puts "Got this request:"
 puts request_lines.inspect
 
 puts "Sending response."
-response = "<pre>" + iter_1.hello + "</pre>"
+response = "<pre>" + iter_0.hello + "</pre>"
 output = "<html><head></head><body>#{response}</body></html>"
 headers = ["http/1.1 200 ok",
           "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
