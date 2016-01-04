@@ -1,5 +1,5 @@
 require 'socket'
-require_relative 'Iter_0'
+require_relative 'hello_world'
 
 iter_0 = HelloWorld.new
 tcp_server = TCPServer.new(9292)
