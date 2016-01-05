@@ -13,10 +13,10 @@ class Iteration_1
   end
 
   def ready_for_request
+    client.accept 
     puts "Ready for a request"
     while line = client.gets and !line.chomp.empty?
       request_lines << line.chomp
-
     end
   end
 
