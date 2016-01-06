@@ -1,15 +1,18 @@
 
 
-
-
-class Paths
+class Request
 
   def initialize
     @iteration_number = 0
     @requests = 0
   end
 
-  def find_path(request)
+  def format_request(request)
+    formatted_request = []
+    key_words = []
+  end
+
+  def match_request(request)
     @requests += 1
     path = request[0].split(" ")[1]
     if path == "/"
@@ -58,6 +61,9 @@ class Paths
     "Total Requests: #{@requests}"
     #shut down the server
   end
+
+
+
 
 
 
