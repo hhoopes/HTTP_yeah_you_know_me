@@ -55,7 +55,7 @@ class Paths
 
   #if path is /shutdown
   def shutdown
-    puts "Total Requests: #{@requests}"
+    "Total Requests: #{@requests}"
     #shut down the server
   end
 

@@ -18,7 +18,7 @@ loop do
   puts request_lines.inspect
 
   puts "Sending response."
-  response = "<pre>" + iter_1.get_response(request_lines) + "</pre>"
+  response = "<pre>" + iter_2.find_path(request_lines) + "</pre>"
   output = "<html><head></head><body>#{response}</body></html>"
   headers = ["http/1.1 200 ok",
             "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
