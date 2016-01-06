@@ -1,8 +1,10 @@
+require 'pry'
 
 
 class Request
+  attr_reader :request_vars
 
-  def initialize
+  def initialize(request_lines, shutdown)
     @iteration_number = 0
     @requests = 0
     @request_vars = Hash.new
@@ -52,26 +54,26 @@ class Request
 
   #if path is / (root)
   def get_diagnostics
-    @request_vars.to_s
-    # "Verb: #{verb}\nPath: #{path}\nProtocol: #{protocol}\nHost: #{host}\nPort: #{port}\nOrigin: #{origin}\nAccept: #{accept}"
+    output_diagnostics = ""
+    output_diagnostics = request_vars.inject("") do |acc, element|
+       acc + "#{element[0].to_s}: #{element[1]}\n"
+     end
+     output_diagnostics
   end
 
-  #if path is /hello
   def hello
     @iteration_number += 1
     "Hello, World!(#{@iteration_number})"
   end
 
-  #if path is /datetime
   def date_time
     t = Time.now
     t.strftime("%I:%M%p on %A, %B %-d, %Y")
   end
 
-  #if path is /shutdown
   def shutdown
     "Total Requests: #{@requests}"
-    tcp_server.close
+    @tcpserver.shutdown_server
   end
 
 
