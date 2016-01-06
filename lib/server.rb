@@ -1,6 +1,6 @@
-$LOAD_PATH.unshift(File.expand_path(".", __dir__))
+
 require 'socket'
-require 'hello_world'
+require_relative 'hello_world'
 
 iter_0 = HelloWorld.new
 tcp_server = TCPServer.new(9292)
