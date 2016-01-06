@@ -1,3 +1,4 @@
+# not functional/current
 
 require 'socket'
 require_relative 'hello_world'
