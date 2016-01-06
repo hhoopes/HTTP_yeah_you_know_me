@@ -1,8 +1,8 @@
 $LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'socket'
-require 'output_diagnostic'
+require 'paths'
 
-iter_2 = 
+iter_2 = Paths.new
 tcp_server = TCPServer.new(9292)
 
 loop do

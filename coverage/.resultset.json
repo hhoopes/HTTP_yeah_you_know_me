@@ -1,0 +1,28 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/Users/nicholasdorans/turing/1module/HTTP_yeah_you_know_me/lib/hello_world.rb": [
+        1,
+        null,
+        1,
+        0,
+        null,
+        null,
+        null,
+        1,
+        0,
+        null,
+        null,
+        1,
+        0,
+        null,
+        null
+      ],
+      "/Users/nicholasdorans/turing/1module/HTTP_yeah_you_know_me/test/test_helper.rb": [
+        1,
+        1
+      ]
+    },
+    "timestamp": 1452052302
+  }
+}
