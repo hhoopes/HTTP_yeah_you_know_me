@@ -1,8 +1,8 @@
 $LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'socket'
-require 'paths'
+require 'request'
 
-iter_2 = Paths.new
+iter_2 = Request.new
 tcp_server = TCPServer.new(9292)
 
 loop do
@@ -18,7 +18,7 @@ loop do
   puts request_lines.inspect
 
   puts "Sending response."
-  response = "<pre>" + iter_2.find_path(request_lines) + "</pre>"
+  response = "<pre>" + "#{iter_2.format_request(request_lines)}" + "</pre>"
   output = "<html><head></head><body>#{response}</body></html>"
   headers = ["http/1.1 200 ok",
             "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
