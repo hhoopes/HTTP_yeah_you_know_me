@@ -1,4 +1,6 @@
+$LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'pry'
+require 'game'
 
 
 class Request
@@ -38,6 +40,7 @@ class Request
   def match_request
     @requests += 1
     path = @request_vars[:path]
+    verb = @request_vars[:verb]
     if path == "/"
       get_diagnostics
     elsif path == "/hello"
@@ -45,6 +48,16 @@ class Request
       hello
     elsif path == "/datetime"
       date_time
+    elsif path == "/start_game" && verb == "POST"
+      #send over to start_game method in Game class
+      player = Game.new
+      player.start_game
+    elsif path == "/game" && verb == "GET"
+      #send over to game_info method in Game class
+      player.game_info
+    elsif path == "/game" && verb == "POST"
+      #send over to make_a_guess method in Game class
+      player.make_a_guess
     elsif path == "/shutdown"
       shutdown
     else
