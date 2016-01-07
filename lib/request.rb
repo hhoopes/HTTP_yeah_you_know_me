@@ -46,6 +46,7 @@ class Request
   def dispatch_request
     @requests += 1
     path = request_vars[:path]
+    verb = request_vars[:verb]
     if path == "/"
       get_diagnostics
     elsif path == "/hello"

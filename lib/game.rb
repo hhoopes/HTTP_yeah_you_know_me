@@ -9,7 +9,7 @@ class Game
     @guess_collector = []
     @guess = 0
   end
-  
+
   #if it's a POST request and the path is /start_game
     #return "Good luck!" and start game
     def start_game
@@ -32,6 +32,7 @@ class Game
         end
       "#{guess_response} with #{guess_counter} guesses!"
       end
+    end
 
   #if it's a POST request and the path is /game
     #@guess_counter += 1
