@@ -1,6 +1,7 @@
 $LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'pry'
 require 'game'
+require 'word_search'
 
 
 class Request
@@ -12,6 +13,7 @@ class Request
     @requests = 0
     @request_vars = Hash.new
     @player = Game.new
+    @searcher = WordSearch.new
     @shutdown_flag = false
   end
 
@@ -56,10 +58,12 @@ class Request
       date_time
     elsif path == "/start_game" || path == "/game"
       @player.game_path(path, verb)
+    elsif path.include?("/word_search")
+      @searcher.find_word(path)
     elsif path == "/shutdown"
       shutdown
     else
-      puts "path does not exist"
+      puts "path does not exist, dawg"
     end
   end
 
