@@ -1,24 +1,26 @@
 $LOAD_PATH.unshift(File.expand_path(".", __dir__))
+
 require 'socket'
 require 'request'
 
 class Server
   attr_reader  :tcpserver, :request_handler
-  attr_accessor  :request, :request_lines, :output, :headers, :shutdown
+  attr_accessor  :client, :request_lines, :output, :headers, :shutdown
 
   def initialize
     @request_lines = []
     @output = ""
     @headers = []
     @tcpserver = TCPServer.new(9292)
-    @shutdown = false
+    @shutdown_flag = false
+    @request_handler = Request.new
   end
 
 
-  def ready_for_request
+  def accept_request
     @request_lines = []
     puts "Ready for a request"
-    while line = request.gets and !line.chomp.empty?
+    while line = client.gets and !line.chomp.empty?
       request_lines << line.chomp
     end
   end
@@ -28,21 +30,23 @@ class Server
     puts request_lines.inspect
   end
 
-  def get_response
-    request_handler = Request.new(request_lines, shutdown)
+  def process_request
+    response_text = @request_handler.process(request_lines)
+    @shutdown_flag = @request_handler.shutdown_flag
+    send_response(response_text)
   end
 
-  def send_response
+  def send_response(response_text)
     puts "Sending response."
-    response = "<pre>" + "#{get_response}" + "</pre>"
+    response = "<pre>" + "#{response_text}" + "</pre>"
     @output = "<html><head></head><body>#{response}</body></html>"
     @headers = ["http/1.1 200 ok",
               "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
               "server: ruby",
               "content-type: text/html; charset=iso-8859-1",
               "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-    request.puts @headers
-    request.puts @output
+    client.puts @headers
+    client.puts @output
   end
 
   def write_response
@@ -50,32 +54,27 @@ class Server
   end
 
   def close_client
-    request.close
+    client.close
     puts "\nResponse complete, exiting."
-    shutdown_server if shutdown?
   end
 
-  def shutdown_server
-    tcp_server.close
+  def check_and_shutdown
+    tcp_server.close if shutdown?
   end
 
   def shutdown?
-    @shutdown
+    @shutdown_flag
   end
 
 end
 
 
-  iter_1 = Server.new
+iter_1 = Server.new
 loop do
-  iter_1.request = iter_1.tcpserver.accept
-  iter_1.ready_for_request
-
-  # iter_1.get_request
-
-  iter_1.send_response
-
-  iter_1.write_response
-
+  iter_1.client = iter_1.tcpserver.accept
+  iter_1.accept_request
+  iter_1.display_to_terminal
+  iter_1.process_request
   iter_1.close_client
+  iter_1.check_and_shutdown
 end

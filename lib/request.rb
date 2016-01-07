@@ -4,15 +4,23 @@ require 'game'
 
 
 class Request
-  attr_reader :request_vars
+  attr_reader :shutdown_flag
+  attr_accessor :request_vars, :requests, :hellos
 
-  def initialize(request_lines, shutdown)
-    @iteration_number = 0
+  def initialize
+    @hellos = 0
     @requests = 0
     @request_vars = Hash.new
+    @shutdown_flag = false
   end
 
-  def format_request(request)
+  def process(request_lines)
+    formatted_request = format(request_lines)
+    define_variables(formatted_request)
+    dispatch_request
+  end
+
+  def format(request)
     formatted_request = []
     key_words = ["Host:", "Accept:", "HTTP/1.1"]
     request.each do |element|
@@ -20,31 +28,29 @@ class Request
           formatted_request << element.split(" ") if element.include?(key)
         end
     end
-    define_variables(formatted_request)
+    formatted_request
   end
 
-  def define_variables(request)
-    verb = request[0][0]
-    path = request[0][1]
-    protocol = request[0][2]
-    host = request[1][1].split(":")[0]
-    port = request[1][1].split(":")[1]
+  def define_variables(formatted_request)
+    verb = formatted_request[0][0]
+    path = formatted_request[0][1]
+    protocol = formatted_request[0][2]
+    host = formatted_request[1][1].split(":")[0]
+    port = formatted_request[1][1].split(":")[1]
     origin = host
-    accept = request[2][1]
-    @request_vars = {verb: verb, path: path, protocol: protocol, host: host, port: port,
-                     origin: origin, accept: accept}
-    match_request
+    accept = formatted_request[2][1]
+    @request_vars = {verb: verb, path: path, protocol: protocol, host: host, port: port, origin: origin, accept: accept}
   end
 
 
-  def match_request
+  def dispatch_request
     @requests += 1
-    path = @request_vars[:path]
-    verb = @request_vars[:verb]
+    path = request_vars[:path]
     if path == "/"
       get_diagnostics
     elsif path == "/hello"
-      # response = HelloWorld.new()
+      # request = HelloWorld.new
+      # request.process_request(hellos)
       hello
     elsif path == "/datetime"
       date_time
@@ -65,7 +71,6 @@ class Request
     end
   end
 
-  #if path is / (root)
   def get_diagnostics
     output_diagnostics = ""
     output_diagnostics = request_vars.inject("") do |acc, element|
@@ -75,8 +80,8 @@ class Request
   end
 
   def hello
-    @iteration_number += 1
-    "Hello, World!(#{@iteration_number})"
+    @hellos += 1
+    "Hello, World!(#{@hellos})"
   end
 
   def date_time
@@ -85,13 +90,8 @@ class Request
   end
 
   def shutdown
+    @shutdown_flag = true
     "Total Requests: #{@requests}"
-    @tcpserver.shutdown_server
   end
-
-
-
-
-
 
 end
