@@ -49,7 +49,7 @@ class Server
     client.puts @output
   end
 
-  def write_response
+  def write_response_to_terminal
     puts ["Wrote this response:", @headers, @output].join("\n")
   end
 

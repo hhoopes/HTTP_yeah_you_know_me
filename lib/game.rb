@@ -13,8 +13,8 @@ class Game
   #if it's a POST request and the path is /start_game
     #return "Good luck!" and start game
     def start_game
-      "Good luck!"
       @game_number = rand(1..100)
+      "Good luck!"
     end
 
   #if it's a GET request and the path is /game

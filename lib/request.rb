@@ -1,11 +1,10 @@
-$LOAD_PATH.unshift(File.expand_path(".", __dir__))
+# $LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'pry'
 require 'game'
 
 
 class Request
-  attr_reader :shutdown_flag
-  attr_accessor :request_vars, :requests, :hellos
+  attr_reader :shutdown_flag, :request_vars, :requests, :hellos, :player
 
   def initialize
     @hellos = 0
@@ -57,7 +56,7 @@ class Request
       date_time
     elsif path == "/start_game" && verb == "POST"
       #send over to start_game method in Game class
-      player = Game.new
+      @player = Game.new
       player.start_game
     elsif path == "/game" && verb == "GET"
       #send over to game_info method in Game class
