@@ -1,5 +1,3 @@
-
-
 class Game
   attr_accessor :guess
 

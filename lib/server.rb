@@ -1,11 +1,9 @@
-$LOAD_PATH.unshift(File.expand_path(".", __dir__))
-
 require 'socket'
 require 'request'
 
 class Server
   attr_reader  :tcpserver, :request_handler, :output, :headers, :shutdown, :request_lines
-  attr_accessor  :client
+  attr_accessor :client
 
   def initialize
     @request_lines = []
@@ -64,15 +62,4 @@ class Server
     @shutdown_flag
   end
 
-end
-
-
-iter_1 = Server.new
-loop do
-  iter_1.client = iter_1.tcpserver.accept
-  iter_1.accept_request
-  iter_1.display_to_terminal
-  iter_1.process_request
-  iter_1.close_client
-  iter_1.check_and_shutdown
 end
