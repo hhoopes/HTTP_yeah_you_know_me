@@ -21,8 +21,10 @@ class Server
     @request_lines = []
     puts "Ready for a request"
     while line = client.gets and !line.chomp.empty?
+
       request_lines << line.chomp
     end
+    binding.pry
   end
 
   def display_to_terminal
@@ -32,6 +34,7 @@ class Server
 
   def process_request
     response_text = @request_handler.process(request_lines)
+    # binding.pry
     @shutdown_flag = @request_handler.shutdown_flag
     send_response(response_text)
   end

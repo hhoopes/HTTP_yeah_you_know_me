@@ -11,6 +11,7 @@ class Request
     @hellos = 0
     @requests = 0
     @request_vars = Hash.new
+    @player = Game.new
     @shutdown_flag = false
   end
 
@@ -50,21 +51,11 @@ class Request
     if path == "/"
       get_diagnostics
     elsif path == "/hello"
-      # request = HelloWorld.new
-      # request.process_request(hellos)
       hello
     elsif path == "/datetime"
       date_time
-    elsif path == "/start_game" && verb == "POST"
-      #send over to start_game method in Game class
-      player = Game.new
-      player.start_game
-    elsif path == "/game" && verb == "GET"
-      #send over to game_info method in Game class
-      player.game_info
-    elsif path == "/game" && verb == "POST"
-      #send over to make_a_guess method in Game class
-      player.make_a_guess
+    elsif path == "/start_game" || path == "/game"
+      @player.game_path(path, verb)
     elsif path == "/shutdown"
       shutdown
     else
