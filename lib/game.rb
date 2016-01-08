@@ -8,13 +8,13 @@ class Game
     @guess = 0
   end
 
-  def game_path(path, verb)
+  def game_path(path, verb, guess)
     if path == "/start_game" && verb == "POST"
       start_game
     elsif path == "/game" && verb == "GET"
       game_info
     elsif path == "/game" && verb == "POST"
-      make_a_guess
+      make_a_guess(guess)
     end
   end
 
@@ -29,7 +29,7 @@ class Game
     #display @guess_counter
     #if @guess_counter > 0
       #says whether the guess was too high, too low or correct
-    def game_info
+    def game_info(guess=0)
       if guess_counter > 0
         if guess > game_number
           guess_response = "Your guess was too high!"
@@ -47,11 +47,11 @@ class Game
     #param = guess
     #guess is stored
     #player is redirected to the GET /game path
-    def make_a_guess
+    def make_a_guess(guess)
       @guess_counter += 1
       #guess = param
-      @guess_collector << guess
-      game_info
+      # @guess_collector << guess
+      game_info(guess)
     end
 
 end
