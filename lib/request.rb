@@ -5,7 +5,8 @@ require 'word_search'
 
 
 class Request
-  attr_reader :shutdown_flag, :request_vars, :requests, :hellos, :player
+  attr_reader :shutdown_flag, :request_vars, :requests, :hellos, :player, :response_code
+  attr_accessor :response_code
 
   def initialize
     @hellos = 0
@@ -14,6 +15,7 @@ class Request
     @player = Game.new
     @searcher = WordSearch.new
     @shutdown_flag = false
+    @response_code = "200 OK poop"
   end
 
   def process(request_lines)
@@ -41,15 +43,18 @@ class Request
     port = formatted_request[1][1].split(":")[1]
     origin = host
     accept = formatted_request[2][1]
-    # if verb == "POST"
-
+    split_guess = formatted_request[-1].join.split("=")
+     if split_guess[0] == "guess"
+       guess = split_guess[1].to_i
+     end
     @request_vars = {verb: verb,
                     path: path,
                     protocol: protocol,
                     host: host,
                     port: port,
                     origin: origin,
-                    accept: accept
+                    accept: accept,
+                    guess: guess
                     }
   end
 
@@ -58,6 +63,7 @@ class Request
     @requests += 1
     path = request_vars[:path]
     verb = request_vars[:verb]
+    guess = request_vars[:guess]
     if path == "/"
       get_diagnostics
     elsif path == "/hello"
@@ -65,7 +71,9 @@ class Request
     elsif path == "/datetime"
       date_time
     elsif path == "/start_game" || path == "/game"
-      @player.game_path(path, verb)
+      response = @player.game_path(path, verb, guess)
+      @response_code = @player.response_code
+      response 
     elsif path.include?("/word_search")
       @searcher.find_word(path)
     elsif path == "/shutdown"
@@ -85,17 +93,18 @@ class Request
 
   def hello
     @hellos += 1
-    "Hello, World!(#{@hellos})"
+    "Hello, World!(#{@hellos})\n\n#{get_diagnostics}"
   end
 
   def date_time
     t = Time.now
-    t.strftime("%I:%M%p on %A, %B %-d, %Y")
+    time = t.strftime("%I:%M%p on %A, %B %-d, %Y")
+    "#{time}\n\n#{get_diagnostics}"
   end
 
   def shutdown
     @shutdown_flag = true
-    "Total Requests: #{@requests}"
+    "Total Requests: #{@requests}\n\n#{get_diagnostics}"
   end
 
 end
