@@ -21,7 +21,6 @@ class Server
     end
     verb = request_lines[0].split(" ")[0]
     if verb == "POST"
-      binding.pry
       request_lines << get_body
     end
   end
