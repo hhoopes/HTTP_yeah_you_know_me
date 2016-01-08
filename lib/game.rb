@@ -29,7 +29,7 @@ class Game
     #display @guess_counter
     #if @guess_counter > 0
       #says whether the guess was too high, too low or correct
-    def game_info(guess=0)
+    def game_info(guess)
       if guess_counter > 0
         if guess > game_number
           guess_response = "Your guess was too high!"

@@ -90,17 +90,18 @@ class Request
 
   def hello
     @hellos += 1
-    "Hello, World!(#{@hellos})"
+    "Hello, World!(#{@hellos})\n\n#{get_diagnostics}"
   end
 
   def date_time
     t = Time.now
-    t.strftime("%I:%M%p on %A, %B %-d, %Y")
+    time = t.strftime("%I:%M%p on %A, %B %-d, %Y")
+    "#{time}\n\n#{get_diagnostics}"
   end
 
   def shutdown
     @shutdown_flag = true
-    "Total Requests: #{@requests}"
+    "Total Requests: #{@requests}\n\n#{get_diagnostics}"
   end
 
 end
