@@ -1,12 +1,11 @@
-$LOAD_PATH.unshift(File.expand_path(".", __dir__))
+# $LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'pry'
 require 'game'
 require 'word_search'
 
 
 class Request
-  attr_reader :shutdown_flag
-  attr_accessor :request_vars, :requests, :hellos
+  attr_reader :shutdown_flag, :request_vars, :requests, :hellos, :player
 
   def initialize
     @hellos = 0
@@ -43,7 +42,7 @@ class Request
     origin = host
     accept = formatted_request[2][1]
     if verb == "POST"
-      
+
     @request_vars = {verb: verb,
                     path: path,
                     protocol: protocol,

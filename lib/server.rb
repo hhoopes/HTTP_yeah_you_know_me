@@ -1,5 +1,3 @@
-$LOAD_PATH.unshift(File.expand_path(".", __dir__))
-
 require 'socket'
 require 'request'
 
@@ -9,8 +7,6 @@ class Server
 
   def initialize
     @request_lines = []
-    @output = ""
-    @headers = []
     @tcpserver = TCPServer.new(9292)
     @shutdown_flag = false
     @request_handler = Request.new
@@ -34,15 +30,15 @@ class Server
     body = client.gets(content_length)
     # request_lines << body
   end
-  
+
   def display_to_terminal
     puts "Got this request:"
     puts request_lines.inspect
   end
 
   def process_request
-    response_text = @request_handler.process(request_lines)
-    @shutdown_flag = @request_handler.shutdown_flag
+    response_text = request_handler.process(request_lines)
+    @shutdown_flag = request_handler.shutdown_flag
     send_response(response_text)
   end
 
@@ -55,12 +51,12 @@ class Server
               "server: ruby",
               "content-type: text/html; charset=iso-8859-1",
               "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-    client.puts @headers
-    client.puts @output
+    client.puts headers
+    client.puts output
   end
 
-  def write_response
-    puts ["Wrote this response:", @headers, @output].join("\n")
+  def write_response_to_terminal
+    puts ["Wrote this response:", headers, output].join("\n")
   end
 
   def close_client
@@ -76,15 +72,4 @@ class Server
     @shutdown_flag
   end
 
-end
-
-
-iter_1 = Server.new
-loop do
-  iter_1.client = iter_1.tcpserver.accept
-  iter_1.accept_request
-  iter_1.display_to_terminal
-  iter_1.process_request
-  iter_1.close_client
-  iter_1.check_and_shutdown
 end
