@@ -1,7 +1,7 @@
 
 
 class WordSearch
-  attr_reader :dictionary
+  attr_reader :dictionary, :word
 
   def initialize
     @dictionary = File.read('/usr/share/dict/words')

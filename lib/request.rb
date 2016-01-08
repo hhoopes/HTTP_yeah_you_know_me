@@ -3,19 +3,17 @@ require 'pry'
 require 'game'
 require 'word_search'
 
-
 class Request
   attr_reader :shutdown_flag, :request_vars, :requests, :hellos, :player, :response_code
-  attr_accessor :response_code
-
-  def initialize
-    @hellos = 0
-    @requests = 0
+  
+    def initialize
     @request_vars = Hash.new
     @player = Game.new
     @searcher = WordSearch.new
     @shutdown_flag = false
-    @response_code = "200 OK poop"
+    @response_code = "200 OK"
+    @requests = 0
+    @hellos = 0
   end
 
   def process(request_lines)
@@ -43,10 +41,7 @@ class Request
     port = formatted_request[1][1].split(":")[1]
     origin = host
     accept = formatted_request[2][1]
-    split_guess = formatted_request[-1].join.split("=")
-     if split_guess[0] == "guess"
-       guess = split_guess[1].to_i
-     end
+    guess = define_guess(formatted_request)
     @request_vars = {verb: verb,
                     path: path,
                     protocol: protocol,
@@ -58,6 +53,12 @@ class Request
                     }
   end
 
+  def define_guess(formatted_request)
+    split_guess = formatted_request[-1].join.split("=")
+     if split_guess[0] == "guess"
+       guess = split_guess[1].to_i
+     end
+   end
 
   def dispatch_request
     @requests += 1
@@ -72,8 +73,8 @@ class Request
       date_time
     elsif path == "/start_game" || path == "/game"
       response = @player.game_path(path, verb, guess)
-      @response_code = @player.response_code
-      response 
+      @response_code = player.response_code
+      response
     elsif path.include?("/word_search")
       @searcher.find_word(path)
     elsif path == "/shutdown"

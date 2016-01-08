@@ -5,57 +5,48 @@ require 'word_search'
 require 'pry'
 
 class WordSearchTest < Minitest::Test
-  attr_reader :client
-
-  def setup
-    @client = Hurley::Client.new "http://127.0.0.1:9292"
-  end
-
+  
   def test_server_returns_a_success_response
     response = Hurley.get("http://127.0.0.1:9292")
     assert response.success?
   end
 
   def test_word_search_extracts_correct_word_from_request
-    skip
     search = WordSearch.new
-    word = client.get "word_search?param=pizza" do |request|
-      search.get_word(request.url)
-    end
+    response = Hurley.get("http://127.0.0.1:9292/word_search?param=pizza")
 
-    assert_equal "pizza", word
+    assert "pizza", search.word
   end
 
-  def test_word_search_identifies_known_word_from_param
-    skip
+  def test_entire_dictionary_gets_populated
     search = WordSearch.new
-    word = client.get "word_search?param=calzone" do |request|
-      search.get_word(request.url)
-    end
+    length = File.read('/usr/share/dict/words').length
 
-    assert search(word).known_word?
+    assert_equal length, search.dictionary.length
   end
 
   def test_word_search_server_responds_to_known_word
-    skip
-    search = WordSearch.new
-    body = client.get "word_search?param=calzone" do |response|
-      response.body
-    end
+    response = Hurley.get("http://127.0.0.1:9292/word_search?param=pizza")
 
-    assert_equal "<html><head></head><body>WORD is a known word</body></html>", body
+    assert_equal "<html><head></head><body><pre>pizza is a known word!</pre></body></html>", response.body
   end
 
   def test_word_search_server_responds_to_unknown_word
-    skip
-    search = WordSearch.new
-    body = client.get "word_search?param=calzone" do |response|
-      response.body
-    end
-    assert_equal "<html><head></head><body>WORD is an unknown word</body></html>", body
+    response = Hurley.get("http://127.0.0.1:9292/word_search?param=calzone")
+
+    assert_equal "<html><head></head><body><pre>calzone is NOT a known word!</pre></body></html>", response.body
   end
+
+  def test_word_search_word_can_start_with_capital_letter
+    response = Hurley.get("http://127.0.0.1:9292/word_search?param=Domino")
+
+    assert_equal "<html><head></head><body><pre>Domino is a known word!</pre></body></html>", response.body
+  end
+
+  def test_word_search_word_can_be_all_capital_letters
+    response = Hurley.get("http://127.0.0.1:9292/word_search?param=PIZZA")
+
+    assert_equal "<html><head></head><body><pre>PIZZA is a known word!</pre></body></html>", response.body
+  end
+
 end
-# response = client.get "" do |req|
-#   req.url
-# end
-# "" represents webpage you're trying to get after root

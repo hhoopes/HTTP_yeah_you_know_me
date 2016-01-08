@@ -2,7 +2,6 @@ class HelloWorld
 
   def initialize
     @iteration_number = 0
-    
   end
 
   def hello

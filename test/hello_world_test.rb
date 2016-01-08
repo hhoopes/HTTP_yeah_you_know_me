@@ -1,36 +1,26 @@
 require 'minitest'
 require 'hurley'
 require_relative '../test/test_helper'
-require 'hello_world'
 require 'pry'
+require 'request'
 
 class HelloWorldTest < Minitest::Test
-  attr_reader :client
-
-  def setup
-    @client = Hurley::Client.new "http://127.0.0.1:9292"
-  end
 
   def test_server_returns_a_success_response
-    response = Hurley.get("http://127.0.0.1:9292/hello")
+    response = Hurley.get("http://127.0.0.1:9292/")
     assert response.success?
   end
 
   def test_server_returns_hello_world_message
     response = Hurley.get("http://127.0.0.1:9292/hello")
 
-    assert response.body.include?("Hello, World!(2)")
+    assert response.body.include?("Hello, World!")
   end
 
-  def test_server_returns_number_of_iterations
+  def test_server_returns_formatted_number_of_iterations
     response = Hurley.get("http://127.0.0.1:9292/hello")
 
-    assert_match /([0-9])+/, response.body
+    assert response.body.scan(/([0-9]+)/)
   end
 
 end
-
-# response = client.get "" do |req|
-#   req.url
-# end
-# "" represents webpage you're trying to get after root
