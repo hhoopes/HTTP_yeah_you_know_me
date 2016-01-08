@@ -1,3 +1,4 @@
+$LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'socket'
 require 'request'
 
@@ -16,11 +17,11 @@ class Server
   def accept_request
     @request_lines = []
     while (line = client.gets) && !line.chomp.empty?
-
       request_lines << line.chomp
     end
-    verb = @request_handler.request_vars[:verb]
+    verb = request_lines[0].split(" ")[0]
     if verb == "POST"
+      binding.pry
       request_lines << get_body
     end
   end
