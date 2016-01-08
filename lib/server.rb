@@ -3,7 +3,7 @@ require 'socket'
 require 'request'
 
 class Server
-  attr_reader   :tcpserver, :request_handler, :request_lines, :output, :headers, :shutdown_flag, :redirect_URL
+  attr_reader :tcpserver, :request_handler, :request_lines, :output, :headers, :shutdown_flag
   attr_accessor :client
 
   def initialize

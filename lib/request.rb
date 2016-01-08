@@ -3,12 +3,10 @@ require 'pry'
 require 'game'
 require 'word_search'
 
-
 class Request
   attr_reader :shutdown_flag, :request_vars, :requests, :hellos, :player, :response_code
-  attr_accessor :response_code
-
-  def initialize
+  
+    def initialize
     @request_vars = Hash.new
     @player = Game.new
     @searcher = WordSearch.new
@@ -75,7 +73,7 @@ class Request
       date_time
     elsif path == "/start_game" || path == "/game"
       response = @player.game_path(path, verb, guess)
-      @response_code = @player.response_code
+      @response_code = player.response_code
       response
     elsif path.include?("/word_search")
       @searcher.find_word(path)
