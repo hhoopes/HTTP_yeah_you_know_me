@@ -25,7 +25,7 @@ class Request
 
   def format(request)
     formatted_request = []
-    key_words = ["Host:", "Accept:", "HTTP/1.1"]
+    key_words = ["Host:", "Accept:", "HTTP/1.1", "guess"]
     request.each do |element|
         key_words.each do |key|
           formatted_request << element.split(" ") if element.include?(key)
@@ -42,7 +42,16 @@ class Request
     port = formatted_request[1][1].split(":")[1]
     origin = host
     accept = formatted_request[2][1]
-    @request_vars = {verb: verb, path: path, protocol: protocol, host: host, port: port, origin: origin, accept: accept}
+    if verb == "POST"
+      
+    @request_vars = {verb: verb,
+                    path: path,
+                    protocol: protocol,
+                    host: host,
+                    port: port,
+                    origin: origin,
+                    accept: accept
+                    }
   end
 
 

@@ -4,8 +4,8 @@ require 'socket'
 require 'request'
 
 class Server
-  attr_reader  :tcpserver, :request_handler
-  attr_accessor  :client, :request_lines, :output, :headers, :shutdown
+  attr_reader  :tcpserver, :request_handler, :request_lines, :output, :headers, :shutdown_flag
+  attr_accessor :client
 
   def initialize
     @request_lines = []
@@ -19,12 +19,22 @@ class Server
 
   def accept_request
     @request_lines = []
-    puts "Ready for a request"
-    while line = client.gets and !line.chomp.empty?
+    while (line = client.gets) && !line.chomp.empty?
+
       request_lines << line.chomp
+    end
+    verb = @request_handler.request_vars[:verb]
+    if verb == "POST"
+      request_lines << get_body
     end
   end
 
+  def get_body
+    content_length = request_lines.detect{ |element| element.include?("Content-Length")}.split(":").last.to_i
+    body = client.gets(content_length)
+    # request_lines << body
+  end
+  
   def display_to_terminal
     puts "Got this request:"
     puts request_lines.inspect
