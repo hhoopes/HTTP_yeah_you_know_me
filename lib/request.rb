@@ -5,7 +5,8 @@ require 'word_search'
 
 
 class Request
-  attr_reader :shutdown_flag, :request_vars, :requests, :hellos, :player
+  attr_reader :shutdown_flag, :request_vars, :requests, :hellos, :player, :response_code
+  attr_accessor :response_code
 
   def initialize
     @hellos = 0
@@ -14,6 +15,7 @@ class Request
     @player = Game.new
     @searcher = WordSearch.new
     @shutdown_flag = false
+    @response_code = "200 OK poop"
   end
 
   def process(request_lines)
@@ -45,7 +47,6 @@ class Request
      if split_guess[0] == "guess"
        guess = split_guess[1].to_i
      end
-
     @request_vars = {verb: verb,
                     path: path,
                     protocol: protocol,
@@ -70,7 +71,9 @@ class Request
     elsif path == "/datetime"
       date_time
     elsif path == "/start_game" || path == "/game"
-      @player.game_path(path, verb, guess)
+      response = @player.game_path(path, verb, guess)
+      @response_code = @player.response_code
+      response 
     elsif path.include?("/word_search")
       @searcher.find_word(path)
     elsif path == "/shutdown"

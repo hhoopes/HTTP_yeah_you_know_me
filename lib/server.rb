@@ -3,7 +3,8 @@ require 'socket'
 require 'request'
 
 class Server
-  attr_reader  :tcpserver, :request_handler, :request_lines, :output, :headers, :shutdown_flag
+  attr_reader   :tcpserver, :request_handler, :request_lines, :output, :headers, :shutdown_flag,
+                :redirect_URL
   attr_accessor :client
 
   def initialize
@@ -42,16 +43,22 @@ class Server
     send_response(response_text)
   end
 
+
   def send_response(response_text)
     puts "Sending response."
     response = "<pre>" + "#{response_text}" + "</pre>"
     @output = "<html><head></head><body>#{response}</body></html>"
-    @headers = ["http/1.1 200 ok",
+
+    @headers = ["http/1.1 #{request_handler.response_code}",
               "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
               "server: ruby",
               "content-type: text/html; charset=iso-8859-1",
-              "content-length: #{output.length}\r\n\r\n"].join("\r\n")
-    client.puts headers
+              "content-length: #{output.length}"]
+    if request_handler.response_code == "301 Moved Permanently"
+      @headers << "Location: http://127.0.0.1:9292/game"
+    end
+    @headers << "\r\n"
+    client.puts headers.join("\r\n")
     client.puts output
   end
 
