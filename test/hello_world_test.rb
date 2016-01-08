@@ -20,7 +20,7 @@ class HelloWorldTest < Minitest::Test
   def test_server_returns_formatted_number_of_iterations
     response = Hurley.get("http://127.0.0.1:9292/hello")
 
-    assert response.body.scan(/([0-9]+)/)
+    assert response.body.scan(/\([0-9]+\)/)
   end
 
 end

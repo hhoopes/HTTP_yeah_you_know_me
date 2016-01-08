@@ -5,17 +5,20 @@ require 'word_search'
 require 'pry'
 
 class WordSearchTest < Minitest::Test
-  
+
   def test_server_returns_a_success_response
     response = Hurley.get("http://127.0.0.1:9292")
     assert response.success?
   end
 
-  def test_word_search_extracts_correct_word_from_request
-    search = WordSearch.new
-    response = Hurley.get("http://127.0.0.1:9292/word_search?param=pizza")
+  def test_word_search_responds_with_correct_word_from_request
+    handler = Request.new
 
-    assert "pizza", search.word
+    request = ["GET /word_search?param=pizza HTTP/1.1", "User-Agent: Hurley v0.2", "Accept-Encoding: gzip;q=1.0,deflate;q=0.6,identity;q=0.3", "Accept: */*", "Connection: close", "Host: 127.0.0.1:9292"]
+
+    processed = handler.process(request)
+
+    assert_equal "pizza is a known word!", processed
   end
 
   def test_entire_dictionary_gets_populated

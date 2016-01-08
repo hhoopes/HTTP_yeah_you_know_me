@@ -40,13 +40,14 @@ class RequestTest < Minitest::Test
     skip
     first_try = Hurley.get("http://127.0.0.1:9292/hello")
     shutdown = Hurley.get("http://127.0.0.1:9292/shutdown")
-    second_try = Hurley.get("http://127.0.0.1:9292/hello")
+    # second_try = Hurley.get("http://127.0.0.1:9292/hello")
 
     assert first_try.success?
     assert_equal "true", shutdown.shutdown_flag
-    refute second_try.success?
+
 
     `ruby start_server.rb`
+    sleep 5
   end
 
   def test_request_handler_receives_new_response_code_on_redirect_and_redirects
@@ -57,5 +58,14 @@ class RequestTest < Minitest::Test
     assert response.redirection?
   end
 
+  def test_given_server_request_handler_returns_a_set_of_correct_variables
+    skip
+    request = Request.new
+    response = Hurley.get("http://127.0.0.1:9292/hello")
+    variables = response.body.split(/\([0-9]+\)\s^/)
 
+
+
+    # assert_equal variables,
+  end
 end
