@@ -1,8 +1,8 @@
 require 'minitest'
 require 'hurley'
 require_relative '../test/test_helper'
-require 'hello_world'
 require 'pry'
+require 'request'
 
 class HelloWorldTest < Minitest::Test
   attr_reader :client
