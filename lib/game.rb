@@ -1,6 +1,6 @@
 class Game
-  attr_reader :response_code, :last_guess
-  attr_accessor :guess, :guess_counter, :game_number
+  attr_reader :response_code
+  attr_accessor :guess, :guess_counter, :game_number, :last_guess
 
   def initialize
     @guess_counter = 0
