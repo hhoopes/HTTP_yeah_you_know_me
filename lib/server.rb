@@ -13,7 +13,6 @@ class Server
     @request_handler = Request.new
   end
 
-
   def accept_request
     @request_lines = []
     while (line = client.gets) && !line.chomp.empty?
@@ -28,7 +27,6 @@ class Server
   def get_body
     content_length = request_lines.detect{ |element| element.include?("Content-Length")}.split(":").last.to_i
     body = client.gets(content_length)
-    # request_lines << body
   end
 
   def display_to_terminal
