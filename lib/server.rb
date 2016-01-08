@@ -1,8 +1,9 @@
+$LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'socket'
 require 'request'
 
 class Server
-  attr_reader  :tcpserver, :request_handler, :output, :headers, :shutdown, :request_lines
+  attr_reader  :tcpserver, :request_handler, :request_lines, :output, :headers, :shutdown_flag
   attr_accessor :client
 
   def initialize
@@ -15,10 +16,19 @@ class Server
 
   def accept_request
     @request_lines = []
-    puts "Ready for a request"
-    while line = client.gets and !line.chomp.empty?
+    while (line = client.gets) && !line.chomp.empty?
       request_lines << line.chomp
     end
+    verb = request_lines[0].split(" ")[0]
+    if verb == "POST"
+      request_lines << get_body
+    end
+  end
+
+  def get_body
+    content_length = request_lines.detect{ |element| element.include?("Content-Length")}.split(":").last.to_i
+    body = client.gets(content_length)
+    # request_lines << body
   end
 
   def display_to_terminal

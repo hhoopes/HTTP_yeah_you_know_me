@@ -12,20 +12,20 @@ class HelloWorldTest < Minitest::Test
   end
 
   def test_server_returns_a_success_response
-    response = Hurley.get("http://127.0.0.1:9292")
+    response = Hurley.get("http://127.0.0.1:9292/hello")
     assert response.success?
   end
 
   def test_server_returns_hello_world_message
-    response = Hurley.get("http://127.0.0.1:9292")
+    response = Hurley.get("http://127.0.0.1:9292/hello")
 
-    assert response.body.include?("Hello, World!")
+    assert response.body.include?("Hello, World!(2)")
   end
 
   def test_server_returns_number_of_iterations
-    response = Hurley.get("http://127.0.0.1:9292")
+    response = Hurley.get("http://127.0.0.1:9292/hello")
 
-    assert_match /[0-9]+/, response.body
+    assert_match /([0-9])+/, response.body
   end
 
 end

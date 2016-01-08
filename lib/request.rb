@@ -1,6 +1,7 @@
-# $LOAD_PATH.unshift(File.expand_path(".", __dir__))
+$LOAD_PATH.unshift(File.expand_path(".", __dir__))
 require 'pry'
 require 'game'
+require 'word_search'
 
 
 class Request
@@ -10,6 +11,8 @@ class Request
     @hellos = 0
     @requests = 0
     @request_vars = Hash.new
+    @player = Game.new
+    @searcher = WordSearch.new
     @shutdown_flag = false
   end
 
@@ -21,7 +24,7 @@ class Request
 
   def format(request)
     formatted_request = []
-    key_words = ["Host:", "Accept:", "HTTP/1.1"]
+    key_words = ["Host:", "Accept:", "HTTP/1.1", "guess"]
     request.each do |element|
         key_words.each do |key|
           formatted_request << element.split(" ") if element.include?(key)
@@ -38,7 +41,16 @@ class Request
     port = formatted_request[1][1].split(":")[1]
     origin = host
     accept = formatted_request[2][1]
-    @request_vars = {verb: verb, path: path, protocol: protocol, host: host, port: port, origin: origin, accept: accept}
+    # if verb == "POST"
+
+    @request_vars = {verb: verb,
+                    path: path,
+                    protocol: protocol,
+                    host: host,
+                    port: port,
+                    origin: origin,
+                    accept: accept
+                    }
   end
 
 
@@ -49,25 +61,17 @@ class Request
     if path == "/"
       get_diagnostics
     elsif path == "/hello"
-      # request = HelloWorld.new
-      # request.process_request(hellos)
       hello
     elsif path == "/datetime"
       date_time
-    elsif path == "/start_game" && verb == "POST"
-      #send over to start_game method in Game class
-      @player = Game.new
-      player.start_game
-    elsif path == "/game" && verb == "GET"
-      #send over to game_info method in Game class
-      player.game_info
-    elsif path == "/game" && verb == "POST"
-      #send over to make_a_guess method in Game class
-      player.make_a_guess
+    elsif path == "/start_game" || path == "/game"
+      @player.game_path(path, verb)
+    elsif path.include?("/word_search")
+      @searcher.find_word(path)
     elsif path == "/shutdown"
       shutdown
     else
-      puts "path does not exist"
+      puts "path does not exist, dawg"
     end
   end
 

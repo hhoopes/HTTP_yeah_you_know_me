@@ -5,6 +5,11 @@ require '../lib/word_search'
 require 'pry'
 
 class WordSearch < Minitest::Test
+=======
+require 'word_search'
+require 'pry'
+
+class WordSearchTest < Minitest::Test
   attr_reader :client
 
   def setup
